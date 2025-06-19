@@ -35,7 +35,7 @@ function showModal() {
     <Modal
       :isOpen="isModalOpen"
       title="Modal Header"
-      content="This is the modal content"
+      content="This is the modal content text."
       @close-modal="isModalOpen = false"
     ></Modal>
   </div>
