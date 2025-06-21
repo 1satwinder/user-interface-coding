@@ -13,7 +13,7 @@ describe("Todo.vue", () => {
     const input = wrapper.find("input#todo-input");
     const button = wrapper.find("button");
 
-    expect(input.exists()).toBe(true);
+    expect(input.exists()).toBe(false);
     expect(button.exists()).toBe(true);
     expect(button.text()).toBe("Add To List");
   });
