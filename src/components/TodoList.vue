@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
+
 interface Todo {
   id: number;
   task: string;
@@ -8,47 +9,48 @@ interface Todo {
 const todo = ref("");
 const todoList = ref<Todo[]>([]);
 let counter = 1;
+const inputRef = ref<HTMLInputElement | null>(null);
 
 function addTodo() {
-  if (todo.value) {
+  if (todo.value.trim()) {
     todoList.value.push({ id: counter, task: todo.value.trim() });
     counter++;
     todo.value = "";
+    inputRef.value?.focus();
   }
 }
 
-function removeTodo(todoID: number) {
-  todoList.value = todoList.value.filter((item) => item.id !== todoID);
+function deleteTodo(id: number) {
+  todoList.value = todoList.value.filter((todo) => todo.id !== id);
+  inputRef.value?.focus();
 }
+
+onMounted(() => {
+  inputRef.value?.focus();
+});
 </script>
 
 <template>
-  <div>
-    <div class="input-container">
-      <form @submit.prevent="">
-        <label for="todo-input">Enter Todo:</label>
-        <input type="text" id="todo-input" v-model="todo" />
-        <button type="submit" @click="addTodo">Submit</button>
-      </form>
-    </div>
-    <div class="list">
-      <ul>
-        <li v-for="todo in todoList" :key="todo.id">
-          <span> {{ todo.task }}</span>
-          <button @click="removeTodo(todo.id)">Delete</button>
-        </li>
-      </ul>
-    </div>
+  <div class="input-container">
+    <form @submit.prevent="">
+      <label for="todo-input">Enter Todo</label>
+      <input
+        type="text"
+        id="todo-input"
+        ref="inputRef"
+        autocomplete="off"
+        v-model="todo"
+        @keydown.enter="addTodo"
+      />
+      <button type="submit" @click="addTodo">Add To List</button>
+    </form>
+  </div>
+  <div class="todo-list">
+    <ul>
+      <li v-for="{ id, task } in todoList" :key="id">
+        <span>{{ task }}</span>
+        <button @click="deleteTodo(id)">Delete</button>
+      </li>
+    </ul>
   </div>
 </template>
-
-<style scoped>
-input {
-  border: 2px solid black;
-}
-button {
-  background-color: aqua;
-  border: 2px solid green;
-  margin-left: 5px;
-}
-</style>
