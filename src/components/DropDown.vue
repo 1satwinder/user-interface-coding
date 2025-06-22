@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, watch, nextTick } from 'vue';
+import { ref, computed, onMounted, watch, nextTick } from "vue";
 
 const options = [
-  { label: 'Option A', value: 'A' },
-  { label: 'Option B', value: 'B' },
-  { label: 'Option C', value: 'C' },
+  { label: "Option A", value: "A" },
+  { label: "Option B", value: "B" },
+  { label: "Option C", value: "C" },
+  { label: "Option D", value: "D" },
 ];
 
 const isOpen = ref(false);
@@ -21,19 +22,20 @@ const toggleDropdown = () => {
 function handleKeyDown(event: KeyboardEvent) {
   if (!isOpen.value) return;
 
-  if (event.key === 'ArrowDown') {
+  if (event.key === "ArrowDown") {
     highlightedIndex.value = (highlightedIndex.value + 1) % options.length;
     event.preventDefault();
-  } else if (event.key === 'ArrowUp') {
-    highlightedIndex.value = (highlightedIndex.value - 1 + options.length) % options.length;
+  } else if (event.key === "ArrowUp") {
+    highlightedIndex.value =
+      (highlightedIndex.value - 1 + options.length) % options.length;
     event.preventDefault();
-  } else if (event.key === 'Enter') {
+  } else if (event.key === "Enter") {
     if (highlightedIndex.value >= 0) {
       selected.value = options[highlightedIndex.value].value;
       isOpen.value = false;
     }
     event.preventDefault();
-  } else if (event.key === 'Escape') {
+  } else if (event.key === "Escape") {
     isOpen.value = false;
     event.preventDefault();
   }
@@ -45,18 +47,20 @@ const handleOptionClick = (index: number) => {
 };
 
 const selectedLabel = computed(() => {
-  return options.find(o => o.value === selected.value)?.label || 'Select option';
+  return (
+    options.find((o) => o.value === selected.value)?.label || "Select option"
+  );
 });
 
 function handleOutsideClick(e: MouseEvent) {
   const el = e.target as HTMLElement;
-  if (!el.closest('.dropdown')) {
+  if (!el.closest(".dropdown")) {
     isOpen.value = false;
   }
 }
 
 onMounted(() => {
-  document.addEventListener('click', handleOutsideClick);
+  document.addEventListener("click", handleOutsideClick);
 });
 </script>
 
@@ -70,11 +74,7 @@ onMounted(() => {
       {{ selectedLabel }}
     </button>
 
-    <ul
-      v-show="isOpen"
-      role="listbox"
-      class="dropdown-list"
-    >
+    <ul v-show="isOpen" role="listbox" class="dropdown-list">
       <li
         v-for="(option, index) in options"
         :key="option.value"
